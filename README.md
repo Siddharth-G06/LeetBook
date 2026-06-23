@@ -133,7 +133,7 @@ To configure AI, open the LeetBook Review Page and click the **Settings ⚙️ g
    $env:OLLAMA_ORIGINS="*"; ollama serve
    ```
 
-   **Settings panel / expected terminal output:**
+   **Settings panel /  terminal output using ollama:**
 
    <p align="center">
      <img width="280" alt="Ollama settings panel" src="https://github.com/user-attachments/assets/10d4b934-6132-40c1-9c54-ae4e4191c6a4">
