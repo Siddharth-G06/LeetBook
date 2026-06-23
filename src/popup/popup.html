@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>LeetBook</title>
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <img src="../../icons/icon48.png" style="width:22px;height:22px;border-radius:5px;" alt="LeetBook">
+      <span class="wordmark mono">leetbook</span>
+    </div>
+    <button id="settingsToggle" class="icon-btn" title="Settings">⚙️</button>
+  </header>
+
+  <div id="settingsPanel" class="hidden">
+    <div class="settings-section">
+      <div style="font-weight: 500; margin-bottom: 6px;">AI Configuration</div>
+      <div style="font-size: 11px; color: var(--text-secondary); margin-bottom: 12px;">
+        Configure your providers below. You can select which one to use on the Review page.
+      </div>
+    </div>
+
+    <div id="ollamaConfig" class="config-group">
+      <div style="font-size: 12px; font-weight: 500; margin-bottom: 4px;">Ollama (Local)</div>
+      <label>Endpoint
+        <input type="text" id="ollamaEndpoint" placeholder="http://localhost:11434" class="mono">
+      </label>
+      <label>Model Name
+        <input type="text" id="ollamaModel" placeholder="llama3.1" class="mono">
+      </label>
+    </div>
+
+    <div id="geminiConfig" class="config-group">
+      <div style="font-size: 12px; font-weight: 500; margin-bottom: 4px; margin-top: 4px;">Google Gemini API</div>
+      <label>API Key
+        <div class="password-input-group">
+          <input type="password" id="geminiApiKey" placeholder="AIzaSy..." class="mono">
+          <button id="toggleApiKey" class="icon-btn" title="Show/Hide">👁️</button>
+        </div>
+      </label>
+      <label>Model Name
+        <input type="text" id="geminiModel" placeholder="gemini-2.5-flash" class="mono">
+      </label>
+    </div>
+
+    <div class="import-section" style="margin-top: 16px; border-top: 1px solid var(--border-subtle); padding-top: 12px;">
+      <button id="importBtn">Import Submission History</button>
+      <div id="importStatus" class="status-text mono"></div>
+    </div>
+  </div>
+
+  <main>
+    <div class="filters">
+      <input type="text" id="searchInput" placeholder="Search..." class="mono">
+      <div class="dropdowns">
+        <select id="diffFilter" class="mono">
+          <option value="">All Diff</option>
+          <option value="Easy">E</option>
+          <option value="Medium">M</option>
+          <option value="Hard">H</option>
+        </select>
+        <select id="patternFilter" class="mono">
+          <option value="">All Patterns</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="solutionList" class="solution-list">
+      <!-- List rows injected here -->
+    </div>
+  </main>
+
+  <footer>
+    <button id="openReviewBtn">Open full review page</button>
+  </footer>
+
+  <script src="popup.js"></script>
+</body>
+</html>
