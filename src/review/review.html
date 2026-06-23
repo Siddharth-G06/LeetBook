@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>LeetBook - Review</title>
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="review.css">
+</head>
+<body>
+  <header class="top-nav">
+    <div class="logo">
+      <img src="../../icons/icon48.png" class="icon" style="width:28px; height:28px; border-radius:6px;" alt="LeetBook">
+      <span class="wordmark mono">leetbook</span>
+    </div>
+    <div class="stats mono">
+      <span id="totalCount">0 Problems</span> | 
+      <span id="patternCount">0 Patterns</span>
+    </div>
+    <div class="search-container">
+      <input type="text" id="searchInput" placeholder="Search entries..." class="mono">
+    </div>
+    <button id="settingsToggleReview" class="icon-btn" title="Settings" style="font-size:18px;">⚙️</button>
+  </header>
+
+  <div class="layout">
+    <aside class="left-rail">
+      <div class="rail-section">
+        <h3>Difficulty</h3>
+        <ul id="diffFilterList" class="mono">
+          <li data-val="" class="active">All <span class="count" id="count-all">0</span></li>
+          <li data-val="Easy">Easy <span class="count" id="count-easy">0</span></li>
+          <li data-val="Medium">Medium <span class="count" id="count-medium">0</span></li>
+          <li data-val="Hard">Hard <span class="count" id="count-hard">0</span></li>
+        </ul>
+      </div>
+      
+      <div class="rail-section">
+        <h3>Patterns</h3>
+        <ul id="patternFilterList" class="mono">
+          <li data-val="" class="active">All Patterns</li>
+          <!-- Injected dynamically -->
+        </ul>
+      </div>
+    </aside>
+
+    <main class="grid-container" id="cardGrid">
+      <!-- Cards injected here -->
+    </main>
+  </div>
+
+  <!-- Expand Panel (Slide Over) -->
+  <div id="slidePanel" class="slide-panel hidden">
+    <div class="slide-header">
+      <h2 id="slideTitle">Problem Title</h2>
+      <button id="closeSlideBtn" class="icon-btn">✕</button>
+    </div>
+    <div class="slide-content">
+      <div class="meta-row">
+        <span id="slideDifficulty" class="difficulty-badge">E</span>
+        <div id="slideLangTabs" class="lang-tabs mono"></div>
+      </div>
+      <div id="slidePatterns" class="pattern-text" style="margin-bottom: 16px;"></div>
+
+      <div class="code-window">
+        <div class="code-header">
+          <div class="code-dots">
+            <span class="dot red"></span>
+            <span class="dot yellow"></span>
+            <span class="dot green"></span>
+          </div>
+          <span id="codeLangLabel" class="code-lang">PYTHON</span>
+        </div>
+        <pre id="slideCode" class="mono"></pre>
+      </div>
+
+      <div class="ai-section">
+        <h3>AI Explanation</h3>
+        <div id="slideAiContent"></div>
+      </div>
+
+      <div class="notes-section">
+        <h3>Complexity & Notes</h3>
+        <div class="complexity-inputs">
+          <input type="text" id="timeComp" placeholder="Time: e.g. O(N)" class="mono">
+          <input type="text" id="spaceComp" placeholder="Space: e.g. O(1)" class="mono">
+        </div>
+        <textarea id="notesArea" placeholder="Add personal notes here..."></textarea>
+      </div>
+
+      <div class="danger-zone">
+        <button id="deleteBtn" class="danger-btn">Delete Solution</button>
+      </div>
+    </div>
+  </div>
+  <div id="slideOverlay" class="hidden"></div>
+
+  <script type="module" src="review.js"></script>
+
+  <!-- Settings Modal -->
+  <div id="settingsModal" class="settings-modal hidden">
+    <div class="settings-modal-backdrop" id="settingsModalBackdrop"></div>
+    <div class="settings-modal-box">
+      <div class="settings-modal-header">
+        <h2>⚙️ LeetBook Settings</h2>
+        <button id="closeSettingsModal" class="icon-btn">✕</button>
+      </div>
+      <div class="settings-modal-body">
+        <div class="settings-group-title">🖥️ Ollama (Local)</div>
+        <label class="settings-label">Endpoint
+          <input type="text" id="rOllamaEndpoint" placeholder="http://localhost:11434" class="mono settings-input">
+        </label>
+        <label class="settings-label">Model Name
+          <input type="text" id="rOllamaModel" placeholder="llama3.1" class="mono settings-input">
+        </label>
+
+        <div class="settings-group-title" style="margin-top:20px;">✨ Google Gemini API</div>
+        <label class="settings-label">API Key
+          <div class="settings-password-row">
+            <input type="password" id="rGeminiApiKey" placeholder="AIzaSy..." class="mono settings-input">
+            <button id="rToggleApiKey" class="icon-btn">👁️</button>
+          </div>
+        </label>
+        <label class="settings-label">Model Name
+          <input type="text" id="rGeminiModel" placeholder="gemini-2.5-flash" class="mono settings-input">
+        </label>
+      </div>
+      <div class="settings-modal-footer">
+        <div id="settingsSaveStatus" class="settings-save-status"></div>
+        <button id="saveSettingsBtn" class="save-btn">Save Settings</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
