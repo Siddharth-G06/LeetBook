@@ -24,24 +24,33 @@
 
 #### The review page
 *Your full catalog — filter by difficulty or pattern, search by title, scan everything at once.*
+
 <img width="959" height="499" alt="Screenshot 2026-06-23 154205" src="https://github.com/user-attachments/assets/6f5e16d2-b37f-489f-9a86-b9345019cb3c" />
 
 #### Quick popup
 *A glance at your most recent solves without leaving LeetCode.*
+
+
 <img width="341" height="365" alt="Screenshot 2026-06-23 152148" src="https://github.com/user-attachments/assets/cec7778f-da55-48c4-a175-791b7fdba830" />
 <img width="293" height="405" alt="Screenshot 2026-06-23 154132" src="https://github.com/user-attachments/assets/4f75f95a-5c4d-4559-9933-f408b6154b4c" />
 <img width="861" height="204" alt="Screenshot 2026-06-23 153309" src="https://github.com/user-attachments/assets/44f6e0dc-3389-4f07-8e36-3259cded88c0" />
 
 #### Filtered by pattern
 *Instantly pull every problem you've solved with Dynamic Programming, Two Pointers, or any other tag.*
+
 <img width="959" height="502" alt="Screenshot 2026-06-23 154339" src="https://github.com/user-attachments/assets/dc33c0a4-09bc-47cc-964d-824dc0165e8b" />
 
 #### Expanded solution card
 *Full code, detected patterns, and the AI-generated explanation side by side.*
+
 <img width="454" height="284" alt="Screenshot 2026-06-23 151957" src="https://github.com/user-attachments/assets/1a93a111-e5c9-4d27-83dc-462e16978a13" />
+
 <img width="402" height="103" alt="Screenshot 2026-06-23 152134" src="https://github.com/user-attachments/assets/7794ac32-ad0b-4f50-8580-1ed8234fae5f" />
+
 <img width="404" height="336" alt="Screenshot 2026-06-23 153050" src="https://github.com/user-attachments/assets/8d0e644e-5b79-4d01-9c04-1518a86d8751" />
+
 <img width="394" height="293" alt="Screenshot 2026-06-23 153044" src="https://github.com/user-attachments/assets/521a1987-8f0c-452c-b102-73eac7cc3a5f" />
+
 <img width="400" height="370" alt="Screenshot 2026-06-23 153037" src="https://github.com/user-attachments/assets/1ac35fe6-b255-453f-b5be-2383600d7acb" />
 
 ---
@@ -49,7 +58,8 @@
 
 1. Clone or download this repository.
 2. Open Chrome and navigate to `chrome://extensions/`.
-3. Enable **Developer mode** in the top right corner.<img width="959" height="113" alt="Screenshot 2026-06-23 152642" src="https://github.com/user-attachments/assets/8a1b17f7-fa7d-4b58-94d2-f041b01e3f28" />
+3. Enable **Developer mode** in the top right corner.
+   <img width="959" height="113" alt="Screenshot 2026-06-23 152642" src="https://github.com/user-attachments/assets/8a1b17f7-fa7d-4b58-94d2-f041b01e3f28" />
 
 4. Click **Load unpacked** and select the `solution-log-extension` folder.
 5. The extension will now be active. Pin the LeetBook icon to your toolbar for easy access!
@@ -74,8 +84,9 @@ To configure AI, open the LeetBook Review Page and click the **Settings ⚙️ g
 2. Run `ollama pull llama3.1` (or your preferred coding model) in your terminal.
 3. **CRITICAL — Fix CORS:** Ollama blocks cross-origin requests by default. You must start Ollama with the allowed origins environment variable for the Chrome Extension to communicate with it.
 
-<img width="812" height="83" alt="Screenshot 2026-06-23 154657" src="https://github.com/user-attachments/assets/d4ec7983-d6dd-406e-a843-3b83451a506e" />
 <img width="293" height="405" alt="Screenshot 2026-06-23 154132" src="https://github.com/user-attachments/assets/10d4b934-6132-40c1-9c54-ae4e4191c6a4" />
+
+<img width="812" height="83" alt="Screenshot 2026-06-23 154657" src="https://github.com/user-attachments/assets/d4ec7983-d6dd-406e-a843-3b83451a506e" />
 
 
    **Mac/Linux:**
