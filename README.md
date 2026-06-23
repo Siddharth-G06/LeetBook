@@ -79,11 +79,6 @@
 </p>
 
 
-<br>
-
-<p align="center">
-  <img width="700" alt="Expanded card 5" src="https://github.com/user-attachments/assets/7794ac32-ad0b-4f50-8580-1ed8234fae5f">
-</p>
 
 ---
 
