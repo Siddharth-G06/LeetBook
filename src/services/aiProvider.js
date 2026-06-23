@@ -76,7 +76,6 @@ Now produce your response in EXACTLY this format. Do NOT skip any section:
 **Note:** If the student's approach violates any problem constraints (e.g., they converted strings to integers when forbidden), or is suboptimal compared to the best known solution, clearly state that here in 1-2 sentences.
 
 ## 2. Brute Force Approach
-*(Derived from the problem description — independent of the student's code)*
 **Idea:** The simplest valid approach to solve this problem.
 **Steps:**
 - Step-by-step (2-4 bullet points)
@@ -84,7 +83,6 @@ Now produce your response in EXACTLY this format. Do NOT skip any section:
 **Space Complexity:** O(...)
 
 ## 3. Optimal Approach
-*(Derived from the problem description — independent of the student's code)*
 **Idea:** The best known approach, respecting ALL problem constraints.
 **Steps:**
 - Step-by-step (2-5 bullet points)
