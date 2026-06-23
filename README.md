@@ -70,8 +70,9 @@ To configure AI, open the LeetBook Review Page and click the **Settings ⚙️ g
 ## 🛠️ Developer Notes
 
 ### Architecture
+- **Manifest V3**: Fully compliant with Chrome's modern Manifest V3 standard.
 - **Vanilla Tech Stack**: Built entirely with Vanilla JavaScript, HTML, and CSS (no React/Vue/Tailwind) for absolute maximum performance and zero build-step overhead.
-- **Background Service Worker**: Handles long-running imports and listens for `chrome.webRequest` events to intercept live submissions.
+- **Background Service Worker**: Handles long-running imports and listens to browser events to orchestrate data flow efficiently under MV3 constraints.
 - **Content Scripts**: Injected into `leetcode.com` to scrape problem constraints, titles, and exact DOM-ordered code lines via Monaco Editor coordinates.
 
 ### Importing History
