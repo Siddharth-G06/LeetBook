@@ -34,87 +34,133 @@ function normalizeLang(lang) {
 }
 
 // ─── Live Submission Capture ──────────────────────────────────────────────────
+//
+// Strategy: detect a click on any "Submit" button, then poll LeetCode's own
+// /api/submissions/ endpoint (the same one the import feature uses) to check
+// for a new Accepted submission. This avoids ALL DOM selector fragility,
+// MutationObserver issues, and CSP-blocked script injection.
 
-async function extractSubmissionData() {
-  try {
-    let title = "Unknown Problem";
-    const path = window.location.pathname;
-    const match = path.match(/\/problems\/([^\/]+)/);
-    let titleSlug = "";
-    if (match && match[1]) {
-      titleSlug = match[1];
-      title = titleSlug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+let isPolling = false;
+let lastCapturedId = null;
+
+/**
+ * Called when the user clicks Submit on a problem page.
+ * Polls for a new Accepted submission every 2 seconds for up to 90 seconds.
+ */
+async function pollForNewAcceptedSubmission(titleSlug) {
+  if (isPolling) return;
+  isPolling = true;
+  console.log("Solution Log: Polling for new accepted submission...");
+
+  const pollStart = Date.now();
+  const maxPollMs = 90_000; // 90 seconds — plenty of time for slow judges
+  const intervalMs = 2_000;
+
+  while (Date.now() - pollStart < maxPollMs) {
+    await new Promise(r => setTimeout(r, intervalMs));
+
+    try {
+      const res = await fetch(
+        "https://leetcode.com/api/submissions/?offset=0&limit=5",
+        { credentials: "include" }
+      );
+      if (!res.ok) continue;
+      const json = await res.json();
+      const submissions = json.submissions_dump || [];
+
+      // Find the most recent submission on this problem
+      const recent = submissions.find(
+        s => !titleSlug || s.title_slug === titleSlug || s.url?.includes(titleSlug)
+      ) || submissions[0];
+
+      if (!recent) continue;
+
+      // Skip if this is a submission we already captured
+      if (recent.id && recent.id === lastCapturedId) continue;
+
+      // Only fire on Accepted
+      if (recent.status_display !== "Accepted") continue;
+
+      // Only fire on truly recent submissions (submitted in the last 3 minutes)
+      const submittedAt = (recent.timestamp || 0) * 1000;
+      if (Date.now() - submittedAt > 180_000) continue;
+
+      // ── Got a new Accepted submission ─────────────────────────────────────
+      lastCapturedId = recent.id;
+      console.log("Solution Log: New accepted submission found:", recent.title, recent.lang);
+
+      const language = normalizeLang(recent.lang);
+      const title = recent.title || titleSlug?.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') || "Unknown Problem";
+      const slug = recent.title_slug || titleSlug || "";
+
+      // Get code — REST API includes it for recent submissions; fall back to GraphQL.
+      let code = (recent.code && recent.code.trim()) ? recent.code : null;
+      if (!code && recent.id) {
+        code = await fetchSubmissionCode(recent.id);
+      }
+      // Final fallback: read from Monaco editor model in the page
+      if (!code) {
+        try {
+          code = window.monaco?.editor?.getModels()?.[0]?.getValue?.() || "";
+        } catch (_) {}
+      }
+
+      if (!code || !code.trim()) {
+        console.warn("Solution Log: Accepted but could not get code, skipping.");
+        break;
+      }
+
+      const qData = await fetchQuestionData(slug);
+      const tags = Array.from(document.querySelectorAll('a[href^="/tag/"]')).map(el => el.innerText.trim());
+
+      const payload = {
+        title,
+        url: `https://leetcode.com/problems/${slug}/`,
+        difficulty: qData.difficulty,
+        problemText: qData.problemText,
+        tags,
+        language,
+        code,
+        dateAdded: new Date(submittedAt).toISOString(),
+        llmExplanation: null,
+        timeComplexity: null,
+        spaceComplexity: null,
+        notes: null,
+      };
+
+      chrome.runtime.sendMessage({ type: "NEW_SUBMISSION", payload });
+      console.log("Solution Log: Sent to background →", title, language);
+      break;
+
+    } catch (err) {
+      console.warn("Solution Log: Poll error:", err);
     }
-
-    // Extract code synchronously FIRST — LeetCode unmounts the editor quickly.
-    let code = "";
-    const codeLines = document.querySelectorAll('.view-lines .view-line');
-    if (codeLines.length > 0) {
-      code = Array.from(codeLines)
-        .map(line => ({
-          text: line.innerText,
-          top: parseFloat(line.style.top) || 0
-        }))
-        .sort((a, b) => a.top - b.top)
-        .map(item => item.text)
-        .join('\n');
-    } else {
-      const codeBlock = document.querySelector('code');
-      if (codeBlock) code = codeBlock.innerText;
-    }
-
-    const tagElements = document.querySelectorAll('a[href^="/tag/"]');
-    const tags = Array.from(tagElements).map(el => el.innerText.trim());
-
-    const langElement =
-      document.querySelector('[data-cy="lang-select"]') ||
-      document.querySelector('.ant-select-selection-item');
-    const language = langElement ? langElement.innerText.trim() : "Unknown";
-
-    const qData = await fetchQuestionData(titleSlug);
-
-    return {
-      title,
-      url: window.location.href.split('/submissions/')[0],
-      difficulty: qData.difficulty,
-      problemText: qData.problemText,
-      tags,
-      code,
-      language,
-      dateAdded: new Date().toISOString(),
-      llmExplanation: null,
-      timeComplexity: null,
-      spaceComplexity: null,
-      notes: null,
-    };
-  } catch (error) {
-    console.warn("Solution Log: Failed to extract submission data.", error);
-    return null;
   }
+
+  isPolling = false;
 }
 
-let recentlyProcessed = false;
+/**
+ * Detect clicks on the Submit button by text content — works regardless of
+ * whatever CSS class or attribute LeetCode uses on the button.
+ */
+document.addEventListener('click', (e) => {
+  // Only on problem pages
+  const match = window.location.pathname.match(/\/problems\/([^\/]+)/);
+  if (!match) return;
 
-const observer = new MutationObserver(async (mutations) => {
-  if (recentlyProcessed) return;
-  for (const mutation of mutations) {
-    if (mutation.type === 'childList') {
-      const successHeader =
-        document.querySelector('[data-e2e-locator="submission-result"]') ||
-        document.querySelector('.text-success');
-      if (successHeader && successHeader.innerText.includes("Accepted")) {
-        recentlyProcessed = true;
-        const data = await extractSubmissionData();
-        if (data && data.code && data.code.trim().length > 0) {
-          chrome.runtime.sendMessage({ type: "NEW_SUBMISSION", payload: data });
-        }
-        setTimeout(() => { recentlyProcessed = false; }, 5000);
-      }
-    }
+  const btn = e.target.closest('button');
+  if (!btn) return;
+
+  // Match by visible text — this is the only stable signal
+  const txt = btn.textContent.trim().toLowerCase();
+  if (txt === 'submit' || txt === 'submit solution' || txt === 'submit code') {
+    const slug = match[1];
+    console.log("Solution Log: Submit clicked for", slug);
+    // Start polling after a short delay (let LeetCode begin processing first)
+    setTimeout(() => pollForNewAcceptedSubmission(slug), 3000);
   }
-});
-
-observer.observe(document.body, { childList: true, subtree: true });
+}, true); // useCapture = true to intercept before any stopPropagation
 
 // ─── Import Logic ─────────────────────────────────────────────────────────────
 
