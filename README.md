@@ -92,7 +92,7 @@
      <img width="800" alt="Enable developer mode" src="https://github.com/user-attachments/assets/8a1b17f7-fa7d-4b58-94d2-f041b01e3f28">
    </p>
 
-4. Click **Load unpacked** and select the `solution-log-extension` folder.
+4. Click **Load unpacked** and select the `cloned LeetBook` folder.
 5. The extension will now be active. Pin the LeetBook icon to your toolbar for easy access!
 
 ---
