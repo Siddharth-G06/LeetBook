@@ -36,8 +36,6 @@
 *A glance at your most recent solves without leaving LeetCode.*
 
 <p align="center">
-  <img width="260" alt="Popup view" src="https://github.com/user-attachments/assets/19203a02-9651-4138-8409-668d030fe8b2">
-  &nbsp;&nbsp;&nbsp;&nbsp;
   <img width="500" alt="Popup list view" src="https://github.com/user-attachments/assets/44f6e0dc-3389-4f07-8e36-3259cded88c0">
 </p>
 
